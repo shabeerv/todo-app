@@ -5,26 +5,6 @@ import FormInput from './common/FormInput'
 import SubmitButton from './common/SubmitButton'
 
 const Form = ({todos, setTodos, editTodo, setEditTodo}) => {
-    
-    const updateTodo = (title, id, completed) => {
-        const newTodo = todos.map((todo) => 
-            todo.id === id ? {title, id, completed} : todo
-        )
-        setTodos(newTodo);
-        setEditTodo("");
-    }
-
-    useEffect(() => {
-        if(editTodo) {
-            formik.setFieldValue("todoText", editTodo.title)
-        }
-        else {
-            formik.setFieldValue("")
-        }
-        // eslint-disable-next-line
-    }, [editTodo])
-
-
     const formik = useFormik({
         initialValues: {
             todoText: '',
@@ -50,43 +30,45 @@ const Form = ({todos, setTodos, editTodo, setEditTodo}) => {
         },
     });
 
+    const updateTodo = (title, id, completed) => {
+        const newTodo = todos.map((todo) => 
+            todo.id === id ? {title, id, completed} : todo
+        )
+        setTodos(newTodo);
+        setEditTodo("");
+    }
+
+    useEffect(() => {
+        if(editTodo) {
+            formik.setFieldValue("todoText", editTodo.title)
+        }
+        else {
+            formik.setFieldValue("")
+        }
+        // eslint-disable-next-line
+    }, [editTodo])
+
+    const customStyle = {inputEdit: 'todo-input edit', todoInput: 'todo-input', addButton: 'todo-button', editButton: 'todo-button edit', }
+
     return (
         <div>
             <form 
                 onSubmit={formik.handleSubmit} 
-                className="todo-form">
-                {editTodo ?   
-                    <FormInput 
-                        type ="text"
-                        placeholder="Add a todo" 
-                        className="todo-input edit"
-                        name="todoText"
-                        value={formik.values.todoText}
-                        onChange={formik.handleChange}
-                    />
-                    :
-                    <FormInput 
-                        type ="text"
-                        placeholder="Add a todo" 
-                        className="todo-input"
-                        name="todoText"
-                        value={formik.values.todoText}
-                        onChange={formik.handleChange}
-                    />
-                }
-
-                {editTodo ?
-                    <SubmitButton 
-                        className="todo-button edit"
-                        text="Update"
-                    /> 
-                    : 
-                    <SubmitButton 
-                        className="todo-button"
-                        text="Add"
-                    />
-                }
-                {formik.touched.todoText && formik.errors.todoText ? <div className="errorMsg">{formik.errors.todoText}</div> : null}
+                className="todo-form"
+            >
+            <FormInput 
+                type="text"
+                placeholder="Add a todo"
+                className={editTodo ? customStyle.inputEdit : customStyle.todoInput}
+                name="todoText"
+                value={formik.values.todoText}
+                onChange={formik.handleChange}
+            />
+            <SubmitButton 
+                className={editTodo ? customStyle.editButton : customStyle.addButton} 
+                text={editTodo ? "Update" : "Add"}
+            /> 
+            {formik.touched.todoText && formik.errors.todoText ? <div className="errorMsg">{formik.errors.todoText}</div> : null}
             </form>
         </div>
     )

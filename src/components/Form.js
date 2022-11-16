@@ -1,6 +1,7 @@
 import React, {useEffect} from 'react'
 import {v4 as uuidv4} from "uuid";
 import { useFormik } from "formik"
+import ButtonComponent from './ButtonComponent';
 
 const Form = ({todos, setTodos, editTodo, setEditTodo}) => {
     
@@ -44,17 +45,6 @@ const Form = ({todos, setTodos, editTodo, setEditTodo}) => {
         }
     }, [editTodo])
 
-    // const onFormSubmit = (event) => {
-    //     event.preventDefault()
-    //     if(!editTodo){
-    //         setTodos([...todos, {id: uuidv4(), title: input, completed: false}])
-    //         setInput("");
-    //     }
-    //     else{
-    //         updateTodo(input, editTodo.id, editTodo.completed)
-    //     }
-        
-    // }
 
     return(
         <form onSubmit={formik.handleSubmit} className="todo-form">
@@ -66,7 +56,7 @@ const Form = ({todos, setTodos, editTodo, setEditTodo}) => {
              required
              onChange={formik.handleChange}
              />
-             {editTodo ? <button type="submit" className='todo-button edit'>Update</button> : <button type="submit" className='todo-button'>Add</button>}
+            {editTodo ? <ButtonComponent type="submit" className="todo-button edit" text="Update"  /> : <ButtonComponent type="submit" className="todo-button" text="Add"  />}
         </form>
     )
 }

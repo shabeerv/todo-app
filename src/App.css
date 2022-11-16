@@ -67,6 +67,10 @@ h1 {
   text-transform: capitalize;
 }
 
+.errorMsg {
+  color: red;
+}
+
 .todo-input.edit {
   border: 2px solid #149fff;
 }

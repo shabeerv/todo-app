@@ -73,8 +73,8 @@ const Form = ({todos, setTodos, editTodo, setEditTodo}) => {
                         onChange={formik.handleChange}
                     />
                 }
-                {editTodo ? <ButtonComponent type="submit" className="todo-button edit" text="Update"  /> : <ButtonComponent type="submit" className="todo-button" text="Add"  />}
                 {formik.touched.todoText && formik.errors.todoText ? <div className='errorMsg'>{formik.errors.todoText}</div> : null}
+                {editTodo ? <ButtonComponent type="submit" className="todo-button edit" text="Update"  /> : <ButtonComponent type="submit" className="todo-button" text="Add"  />}
             </form>
         </div>
     )

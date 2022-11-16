@@ -31,7 +31,6 @@ const TodosList = ({ todos, setTodos, setEditTodo }) => {
                     <div key={todo.id} onClick={() => handleComplete(todo)}>
                         {todo.title}
                     </div>
-
                     <div className="icons">
                         <RiCloseCircleLine 
                             onClick={() => handleDelete(todo)}

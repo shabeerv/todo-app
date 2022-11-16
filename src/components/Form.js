@@ -29,8 +29,8 @@ const Form = ({todos, setTodos, editTodo, setEditTodo}) => {
         initialValues: {
             todoText: '',
         },
+        
         onSubmit: values => {
-
             if(!editTodo){
                 setTodos([...todos, {id: uuidv4(), title: values.todoText, completed: false}])
                 formik.setFieldValue("todoText", "")

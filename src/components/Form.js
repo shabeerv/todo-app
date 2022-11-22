@@ -3,6 +3,7 @@ import {v4 as uuidv4} from "uuid"
 import { useFormik } from "formik"
 import FormInput from './common/FormInput'
 import SubmitButton from './common/SubmitButton'
+import * as Yup from "yup"
 
 const Form = ({todos, setTodos, editTodo, setEditTodo}) => {
     const formik = useFormik({
@@ -10,24 +11,27 @@ const Form = ({todos, setTodos, editTodo, setEditTodo}) => {
             todoText: '',
         },
         
-        onSubmit: values => {
+        onSubmit: (values, actions) => {
             if(!editTodo){
                 setTodos([...todos, {id: uuidv4(), title: values.todoText, completed: false}])
-                formik.setFieldValue("todoText", "")
+                // actions.resetForm({
+                //     values: {
+                //         todoText: ''
+                //     }
+                // })
+
+                formik.setFieldValue('todoText', "", false)
             }
             else{
                 updateTodo(values.todoText, editTodo.id, editTodo.completed)
-                formik.setFieldValue("todoText", "")
+                formik.setFieldValue('todoText', "", false)
             }
         },
 
-        validate: () => {
-            const errors = {};
-            if (!formik.values.todoText) {
-            errors.todoText = "Required";
-            }
-            return errors;
-        },
+        validationSchema: Yup.object().shape({
+            todoText: Yup.string()
+            .required("Required"),
+        }),
     });
 
     const updateTodo = (title, id, completed) => {
@@ -43,34 +47,37 @@ const Form = ({todos, setTodos, editTodo, setEditTodo}) => {
             formik.setFieldValue("todoText", editTodo.title)
         }
         else {
-            formik.setFieldValue("")
+            formik.setFieldValue("todoText", "")
         }
         // eslint-disable-next-line
     }, [editTodo])
 
     const customStyle = {inputEdit: 'todo-input edit', todoInput: 'todo-input', addButton: 'todo-button', editButton: 'todo-button edit', }
+    const temp  = [{id: 1, type: "text", placeholder: "add a todo"}]
 
-    return (
-        <div>
-            <form 
-                onSubmit={formik.handleSubmit} 
-                className="todo-form"
-            >
-            <FormInput 
-                type="text"
-                placeholder="Add a todo"
-                className={editTodo ? customStyle.inputEdit : customStyle.todoInput}
-                name="todoText"
-                value={formik.values.todoText}
-                onChange={formik.handleChange}
-            />
+    const formInput = temp.map(item => { return <FormInput
+        type={item.type}
+        placeholder={item.placeholder}
+        className={editTodo ? customStyle.inputEdit : customStyle.todoInput}
+        name="todoText"
+        value={formik.values.todoText}
+        onChange={formik.handleChange}
+        />
+    })
+
+    return ( 
+        <form 
+            onSubmit={formik.handleSubmit} 
+            className="todo-form">
+
+            {formInput}
+                
             <SubmitButton 
-                className={editTodo ? customStyle.editButton : customStyle.addButton} 
+                className={editTodo ? customStyle.editButton : customStyle.addButton}
                 text={editTodo ? "Update" : "Add"}
             /> 
-            {formik.touched.todoText && formik.errors.todoText ? <div className="errorMsg">{formik.errors.todoText}</div> : null}
-            </form>
-        </div>
+            {formik.touched.todoText && formik.errors.todoText && <li className="errorMsg">{formik.errors.todoText}</li>}
+        </form>
     )
 }
 
